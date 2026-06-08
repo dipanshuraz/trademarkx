@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrademarkSearchRouteImport } from './routes/trademark-search'
+import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TrademarkSearchRoute = TrademarkSearchRouteImport.update({
   id: '/trademark-search',
   path: '/trademark-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApplyRoute = ApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/apply': typeof ApplyRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/trademark-search'
+  fullPaths: '/' | '/apply' | '/trademark-search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/trademark-search'
-  id: '__root__' | '/' | '/trademark-search'
+  to: '/' | '/apply' | '/trademark-search'
+  id: '__root__' | '/' | '/apply' | '/trademark-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApplyRoute: typeof ApplyRoute
   TrademarkSearchRoute: typeof TrademarkSearchRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/trademark-search'
       fullPath: '/trademark-search'
       preLoaderRoute: typeof TrademarkSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/apply': {
+      id: '/apply'
+      path: '/apply'
+      fullPath: '/apply'
+      preLoaderRoute: typeof ApplyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApplyRoute: ApplyRoute,
   TrademarkSearchRoute: TrademarkSearchRoute,
 }
 export const routeTree = rootRouteImport
