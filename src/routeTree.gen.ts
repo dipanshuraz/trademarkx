@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrademarkSearchRouteImport } from './routes/trademark-search'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TrademarkSearchRoute = TrademarkSearchRouteImport.update({
   id: '/trademark-search',
   path: '/trademark-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApplyRoute = ApplyRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
+  '/dashboard': typeof DashboardRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
+  '/dashboard': typeof DashboardRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/apply': typeof ApplyRoute
+  '/dashboard': typeof DashboardRoute
   '/trademark-search': typeof TrademarkSearchRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/apply' | '/trademark-search'
+  fullPaths: '/' | '/apply' | '/dashboard' | '/trademark-search'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/apply' | '/trademark-search'
-  id: '__root__' | '/' | '/apply' | '/trademark-search'
+  to: '/' | '/apply' | '/dashboard' | '/trademark-search'
+  id: '__root__' | '/' | '/apply' | '/dashboard' | '/trademark-search'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApplyRoute: typeof ApplyRoute
+  DashboardRoute: typeof DashboardRoute
   TrademarkSearchRoute: typeof TrademarkSearchRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/trademark-search'
       fullPath: '/trademark-search'
       preLoaderRoute: typeof TrademarkSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/apply': {
@@ -88,8 +105,19 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApplyRoute: ApplyRoute,
+  DashboardRoute: DashboardRoute,
   TrademarkSearchRoute: TrademarkSearchRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
