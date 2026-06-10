@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, type Lead } from "@/lib/mock-data";
+import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, MOCK_SERVICE_INQUIRIES, EXECUTIVES, type Lead, type ServiceInquiry } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — TrademarkX" }] }),
@@ -62,12 +62,14 @@ function AdminPage() {
           <Tabs defaultValue="leads">
             <TabsList>
               <TabsTrigger value="leads">Leads</TabsTrigger>
+              <TabsTrigger value="inquiries">Service Inquiries</TabsTrigger>
               <TabsTrigger value="applications">Applications</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
             </TabsList>
 
             <TabsContent value="leads"><LeadsTable /></TabsContent>
+            <TabsContent value="inquiries"><InquiriesTable /></TabsContent>
             <TabsContent value="applications"><AppsTable /></TabsContent>
             <TabsContent value="payments"><PaymentsTable /></TabsContent>
             <TabsContent value="users"><UsersTable /></TabsContent>
