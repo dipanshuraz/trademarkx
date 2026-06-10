@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, ShieldCheck, Award, Users, Building2, Search, Sparkles, Lock, Globe, BadgeIndianRupee, FileCheck, Star, Check, Scale, Briefcase, Megaphone } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, Users, Search, Sparkles, Lock, Globe, BadgeIndianRupee, FileCheck, Star, Check, Scale, Briefcase, Megaphone, Lightbulb, Copyright, Palette, Star as StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
-import { TM_CLASSES, TESTIMONIALS, FAQS } from "@/lib/mock-data";
+import { TM_CLASSES, TESTIMONIALS, FAQS, SERVICE_CATEGORIES } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -191,7 +191,7 @@ function Index() {
           <div className="grid gap-6 md:grid-cols-3">
             {[
               { name: "Starter", price: 1499, features: ["1 Class Filing","Trademark Search Report","Application Drafting","Email Support"], cta: "Choose Starter" },
-              { name: "Professional", price: 3499, popular: true, features: ["Up to 2 Classes","Priority Search Report","Application Drafting","Examination Response","Dedicated Manager","Phone + Email Support"], cta: "Choose Professional" },
+              { name: "Standard", price: 3499, popular: true, features: ["Trademark Search Report","Trademark Filing (Up to 1 Class)","Examination Report Response Support","Application Filing","Application Tracking","Dedicated Support"], highlight: "Examination Report Response Support", cta: "Choose Standard" },
               { name: "Premium", price: 6999, features: ["Up to 5 Classes","Comprehensive Search","Application Drafting","Examination Response","Opposition Defence","Hearing Representation","Dedicated Manager"], cta: "Choose Premium" },
             ].map((p) => (
               <Card key={p.name} className={`relative border-border/60 ${p.popular ? "border-primary shadow-lg" : ""}`} style={!p.popular ? { boxShadow: "var(--shadow-card)" } : { boxShadow: "var(--shadow-elegant)" }}>
@@ -202,15 +202,15 @@ function Index() {
                   <CardTitle>{p.name}</CardTitle>
                   <div className="mt-2 flex items-baseline gap-1">
                     <span className="text-4xl font-bold tracking-tight">₹{p.price.toLocaleString("en-IN")}</span>
-                    <span className="text-sm text-muted-foreground">+ govt. fees</span>
+                    <span className="text-sm text-muted-foreground">+ Government Fees</span>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <ul className="space-y-2.5 text-sm">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" />
-                        <span>{f}</span>
+                      <li key={f} className={`flex items-start gap-2 ${"highlight" in p && p.highlight === f ? "rounded-md bg-accent/60 p-2 -mx-1 font-medium text-foreground" : ""}`}>
+                        <Check className={`mt-0.5 h-4 w-4 shrink-0 ${"highlight" in p && p.highlight === f ? "text-primary" : "text-success"}`} />
+                        <span>{f}{"highlight" in p && p.highlight === f && <Badge variant="secondary" className="ml-2 bg-primary/10 text-primary text-[10px] uppercase tracking-wide">Value Added</Badge>}</span>
                       </li>
                     ))}
                   </ul>
@@ -221,6 +221,69 @@ function Index() {
               </Card>
             ))}
           </div>
+        </section>
+
+        {/* SERVICES OVERVIEW */}
+        <section className="bg-secondary/30 py-20">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto mb-12 max-w-2xl text-center">
+              <Badge variant="outline" className="mb-3">Our Services</Badge>
+              <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Complete IP Protection, Under One Roof</h2>
+              <p className="mt-3 text-muted-foreground">Trademarks, patents, copyrights and designs — handled end-to-end by registered IP professionals.</p>
+            </div>
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                { icon: ShieldCheck, key: "Trademark", to: "/trademark-search" },
+                { icon: Lightbulb, key: "Patent", to: "/services/patents" },
+                { icon: Copyright, key: "Copyright", to: "/services/copyrights" },
+                { icon: Palette, key: "Design Registration", to: "/services/designs" },
+              ].map((s) => {
+                const cat = SERVICE_CATEGORIES.find((c) => c.key === s.key)!;
+                return (
+                  <Card key={s.key} className="border-border/60 transition hover:border-primary/50" style={{ boxShadow: "var(--shadow-card)" }}>
+                    <CardHeader>
+                      <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                        <s.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <CardTitle className="text-lg">{cat.title}</CardTitle>
+                      <CardDescription>{cat.tagline}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="mb-4 space-y-1.5 text-sm text-muted-foreground">
+                        {cat.items.slice(0, 4).map((it) => (
+                          <li key={it.name} className="flex items-start gap-1.5"><Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />{it.name}</li>
+                        ))}
+                      </ul>
+                      <Button asChild variant="outline" size="sm" className="w-full">
+                        <Link to={s.to}>Explore</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* GLOBAL TRADEMARK CTA */}
+        <section className="container mx-auto px-4 py-20">
+          <Card className="relative overflow-hidden border-border/60" style={{ boxShadow: "var(--shadow-elegant)" }}>
+            <div className="grid items-center gap-6 p-8 md:grid-cols-[1fr_auto] md:p-12">
+              <div>
+                <Badge variant="outline" className="mb-3 gap-1"><Globe className="h-3 w-3" /> Global</Badge>
+                <h2 className="text-2xl font-bold tracking-tight md:text-3xl">Global Trademark Registration</h2>
+                <p className="mt-3 max-w-2xl text-muted-foreground">Protect your brand globally with trademark registration services across India, USA, UK, Europe, Australia, Canada, and other major jurisdictions.</p>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                  {["India","USA","UK","Europe (EUIPO)","Australia","Canada"].map((c) => (
+                    <span key={c} className="rounded-full border border-border bg-background px-3 py-1">{c}</span>
+                  ))}
+                </div>
+              </div>
+              <Button size="lg" asChild>
+                <Link to="/global-trademark">Get International Trademark Quote <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
+              </Button>
+            </div>
+          </Card>
         </section>
 
         {/* TESTIMONIALS */}
