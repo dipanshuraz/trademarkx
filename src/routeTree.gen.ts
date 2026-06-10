@@ -10,15 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrademarkSearchRouteImport } from './routes/trademark-search'
+import { Route as GlobalTrademarkRouteImport } from './routes/global-trademark'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackApplicationIdRouteImport } from './routes/track.$applicationId'
+import { Route as ServicesPatentsRouteImport } from './routes/services.patents'
+import { Route as ServicesDesignsRouteImport } from './routes/services.designs'
+import { Route as ServicesCopyrightsRouteImport } from './routes/services.copyrights'
 
 const TrademarkSearchRoute = TrademarkSearchRouteImport.update({
   id: '/trademark-search',
   path: '/trademark-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlobalTrademarkRoute = GlobalTrademarkRouteImport.update({
+  id: '/global-trademark',
+  path: '/global-trademark',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -46,13 +55,32 @@ const TrackApplicationIdRoute = TrackApplicationIdRouteImport.update({
   path: '/track/$applicationId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesPatentsRoute = ServicesPatentsRouteImport.update({
+  id: '/services/patents',
+  path: '/services/patents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesDesignsRoute = ServicesDesignsRouteImport.update({
+  id: '/services/designs',
+  path: '/services/designs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesCopyrightsRoute = ServicesCopyrightsRouteImport.update({
+  id: '/services/copyrights',
+  path: '/services/copyrights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
+  '/services/copyrights': typeof ServicesCopyrightsRoute
+  '/services/designs': typeof ServicesDesignsRoute
+  '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
 export interface FileRoutesByTo {
@@ -60,7 +88,11 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
+  '/services/copyrights': typeof ServicesCopyrightsRoute
+  '/services/designs': typeof ServicesDesignsRoute
+  '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
 export interface FileRoutesById {
@@ -69,7 +101,11 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
+  '/services/copyrights': typeof ServicesCopyrightsRoute
+  '/services/designs': typeof ServicesDesignsRoute
+  '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
 export interface FileRouteTypes {
@@ -79,7 +115,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
+    | '/services/copyrights'
+    | '/services/designs'
+    | '/services/patents'
     | '/track/$applicationId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -87,7 +127,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
+    | '/services/copyrights'
+    | '/services/designs'
+    | '/services/patents'
     | '/track/$applicationId'
   id:
     | '__root__'
@@ -95,7 +139,11 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
+    | '/services/copyrights'
+    | '/services/designs'
+    | '/services/patents'
     | '/track/$applicationId'
   fileRoutesById: FileRoutesById
 }
@@ -104,7 +152,11 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ApplyRoute: typeof ApplyRoute
   DashboardRoute: typeof DashboardRoute
+  GlobalTrademarkRoute: typeof GlobalTrademarkRoute
   TrademarkSearchRoute: typeof TrademarkSearchRoute
+  ServicesCopyrightsRoute: typeof ServicesCopyrightsRoute
+  ServicesDesignsRoute: typeof ServicesDesignsRoute
+  ServicesPatentsRoute: typeof ServicesPatentsRoute
   TrackApplicationIdRoute: typeof TrackApplicationIdRoute
 }
 
@@ -115,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/trademark-search'
       fullPath: '/trademark-search'
       preLoaderRoute: typeof TrademarkSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/global-trademark': {
+      id: '/global-trademark'
+      path: '/global-trademark'
+      fullPath: '/global-trademark'
+      preLoaderRoute: typeof GlobalTrademarkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -152,6 +211,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrackApplicationIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/patents': {
+      id: '/services/patents'
+      path: '/services/patents'
+      fullPath: '/services/patents'
+      preLoaderRoute: typeof ServicesPatentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/designs': {
+      id: '/services/designs'
+      path: '/services/designs'
+      fullPath: '/services/designs'
+      preLoaderRoute: typeof ServicesDesignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/copyrights': {
+      id: '/services/copyrights'
+      path: '/services/copyrights'
+      fullPath: '/services/copyrights'
+      preLoaderRoute: typeof ServicesCopyrightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -160,19 +240,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ApplyRoute: ApplyRoute,
   DashboardRoute: DashboardRoute,
+  GlobalTrademarkRoute: GlobalTrademarkRoute,
   TrademarkSearchRoute: TrademarkSearchRoute,
+  ServicesCopyrightsRoute: ServicesCopyrightsRoute,
+  ServicesDesignsRoute: ServicesDesignsRoute,
+  ServicesPatentsRoute: ServicesPatentsRoute,
   TrackApplicationIdRoute: TrackApplicationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

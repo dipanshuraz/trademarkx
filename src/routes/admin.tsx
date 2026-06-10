@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, type Lead } from "@/lib/mock-data";
+import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, MOCK_SERVICE_INQUIRIES, EXECUTIVES, type Lead, type ServiceInquiry } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — TrademarkX" }] }),
@@ -62,12 +62,14 @@ function AdminPage() {
           <Tabs defaultValue="leads">
             <TabsList>
               <TabsTrigger value="leads">Leads</TabsTrigger>
+              <TabsTrigger value="inquiries">Service Inquiries</TabsTrigger>
               <TabsTrigger value="applications">Applications</TabsTrigger>
               <TabsTrigger value="payments">Payments</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
             </TabsList>
 
             <TabsContent value="leads"><LeadsTable /></TabsContent>
+            <TabsContent value="inquiries"><InquiriesTable /></TabsContent>
             <TabsContent value="applications"><AppsTable /></TabsContent>
             <TabsContent value="payments"><PaymentsTable /></TabsContent>
             <TabsContent value="users"><UsersTable /></TabsContent>
@@ -202,6 +204,103 @@ function UsersTable() {
                 <TableCell>{u.city}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{u.joinedAt}</TableCell>
                 <TableCell><Badge variant="secondary">{u.applications}</Badge></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
+  );
+}
+
+const CATEGORY_OPTIONS = ["Trademark","Patent","Copyright","Design Registration","International Trademark"] as const;
+const COUNTRY_FILTER = ["India","USA","UK","Europe (EUIPO)","Australia","Canada"] as const;
+const INQ_STATUS = ["New","Contacted","Quoted","Converted","Lost"] as const;
+
+const INQ_STATUS_COLORS: Record<ServiceInquiry["status"], string> = {
+  New: "bg-primary/15 text-primary",
+  Contacted: "bg-warning text-warning-foreground",
+  Quoted: "bg-accent text-accent-foreground",
+  Converted: "bg-success text-success-foreground",
+  Lost: "bg-destructive text-destructive-foreground",
+};
+
+function InquiriesTable() {
+  const [q, setQ] = useState("");
+  const [cat, setCat] = useState("all");
+  const [country, setCountry] = useState("all");
+  const [status, setStatus] = useState("all");
+  const [exec, setExec] = useState("all");
+
+  const rows = MOCK_SERVICE_INQUIRIES.filter((i) =>
+    (cat === "all" || i.category === cat) &&
+    (country === "all" || i.country === country) &&
+    (status === "all" || i.status === status) &&
+    (exec === "all" || i.assignedTo === exec) &&
+    (q === "" || i.brandName.toLowerCase().includes(q.toLowerCase()) || i.businessName.toLowerCase().includes(q.toLowerCase()) || i.contactName.toLowerCase().includes(q.toLowerCase())),
+  ).slice(0, 60);
+
+  return (
+    <Card>
+      <CardHeader className="space-y-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Search by brand, business or contact..." className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          <Select value={cat} onValueChange={setCat}>
+            <SelectTrigger><SelectValue placeholder="Service Type" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All service types</SelectItem>
+              {CATEGORY_OPTIONS.map((x) => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={country} onValueChange={setCountry}>
+            <SelectTrigger><SelectValue placeholder="Country" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All countries</SelectItem>
+              {COUNTRY_FILTER.map((x) => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger><SelectValue placeholder="Status" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All statuses</SelectItem>
+              {INQ_STATUS.map((x) => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Select value={exec} onValueChange={setExec}>
+            <SelectTrigger><SelectValue placeholder="Assigned Executive" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All executives</SelectItem>
+              {EXECUTIVES.map((x) => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+            </SelectContent>
+          </Select>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Inquiry ID</TableHead><TableHead>Category</TableHead><TableHead>Service</TableHead><TableHead>Country</TableHead><TableHead>Business</TableHead><TableHead>Brand</TableHead><TableHead>Contact</TableHead><TableHead>Assigned</TableHead><TableHead>Status</TableHead><TableHead>Created</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((i) => (
+              <TableRow key={i.id}>
+                <TableCell className="font-mono text-xs">{i.id}</TableCell>
+                <TableCell><Badge variant="outline">{i.category}</Badge></TableCell>
+                <TableCell className="text-sm">{i.serviceName}</TableCell>
+                <TableCell className="text-sm">{i.country}</TableCell>
+                <TableCell className="text-sm">{i.businessName}</TableCell>
+                <TableCell className="font-medium">{i.brandName}</TableCell>
+                <TableCell className="text-sm">
+                  <div>{i.contactName}</div>
+                  <div className="text-xs text-muted-foreground">{i.email}</div>
+                </TableCell>
+                <TableCell className="text-sm">{i.assignedTo}</TableCell>
+                <TableCell><Badge className={INQ_STATUS_COLORS[i.status]}>{i.status}</Badge></TableCell>
+                <TableCell className="text-sm text-muted-foreground">{i.createdAt}</TableCell>
               </TableRow>
             ))}
           </TableBody>
