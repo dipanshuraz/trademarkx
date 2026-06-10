@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, MOCK_SERVICE_INQUIRIES, EXECUTIVES, type Lead, type ServiceInquiry } from "@/lib/mock-data";
+import { MOCK_LEADS, MOCK_APPLICATIONS, MOCK_PAYMENTS, MOCK_USERS, MOCK_SERVICE_INQUIRIES, EXECUTIVES, SERVICE_TYPE_OPTIONS, type Lead, type ServiceInquiry } from "@/lib/mock-data";
+import { useLeadsStore, type ConsultationLead } from "@/stores/leads-store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — TrademarkX" }] }),
@@ -81,20 +82,46 @@ function AdminPage() {
   );
 }
 
+type LeadRow = Lead | (ConsultationLead & { trademarkName?: string });
+
 function LeadsTable() {
+  const storedLeads = useLeadsStore((s) => s.leads);
   const [q, setQ] = useState("");
   const [s, setS] = useState("all");
-  const rows = MOCK_LEADS.filter((l) =>
-    (s === "all" || l.status === s) &&
-    (q === "" || l.name.toLowerCase().includes(q.toLowerCase()) || l.trademarkName.toLowerCase().includes(q.toLowerCase())),
-  ).slice(0, 50);
+  const [serviceType, setServiceType] = useState("all");
+
+  const consultationAsLeads: LeadRow[] = storedLeads.map((l) => ({
+    ...l,
+    trademarkName: l.company ?? "—",
+  }));
+  const allLeads: LeadRow[] = [...consultationAsLeads, ...MOCK_LEADS];
+
+  const rows = allLeads.filter((l) => {
+    const leadServiceType = "serviceType" in l ? l.serviceType : undefined;
+    return (
+      (s === "all" || l.status === s) &&
+      (serviceType === "all" || leadServiceType === serviceType) &&
+      (q === "" ||
+        l.name.toLowerCase().includes(q.toLowerCase()) ||
+        (l.trademarkName ?? "").toLowerCase().includes(q.toLowerCase()) ||
+        l.email.toLowerCase().includes(q.toLowerCase()))
+    );
+  }).slice(0, 60);
+
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+      <CardHeader className="flex flex-col gap-3 space-y-0 sm:flex-row sm:items-center">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Search leads..." className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <Select value={serviceType} onValueChange={setServiceType}>
+          <SelectTrigger className="w-56"><SelectValue placeholder="Service Type" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All service types</SelectItem>
+            {SERVICE_TYPE_OPTIONS.map((x) => <SelectItem key={x} value={x}>{x}</SelectItem>)}
+          </SelectContent>
+        </Select>
         <Select value={s} onValueChange={setS}>
           <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
           <SelectContent>
@@ -107,7 +134,7 @@ function LeadsTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Lead ID</TableHead><TableHead>Name</TableHead><TableHead>Mobile</TableHead><TableHead>Email</TableHead><TableHead>Trademark</TableHead><TableHead>Status</TableHead><TableHead>Source</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
+              <TableHead>Lead ID</TableHead><TableHead>Name</TableHead><TableHead>Mobile</TableHead><TableHead>Email</TableHead><TableHead>Service Type</TableHead><TableHead>Company / Brand</TableHead><TableHead>Status</TableHead><TableHead>Source</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -115,9 +142,16 @@ function LeadsTable() {
               <TableRow key={l.id}>
                 <TableCell className="font-mono text-xs">{l.id}</TableCell>
                 <TableCell className="font-medium">{l.name}</TableCell>
-                <TableCell className="text-sm">{l.mobile}</TableCell>
+                <TableCell className="text-sm">{l.mobile || "—"}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{l.email}</TableCell>
-                <TableCell>{l.trademarkName}</TableCell>
+                <TableCell>
+                  {"serviceType" in l && l.serviceType ? (
+                    <Badge variant="outline">{l.serviceType}</Badge>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">—</span>
+                  )}
+                </TableCell>
+                <TableCell>{l.trademarkName ?? "—"}</TableCell>
                 <TableCell><Badge className={LEAD_COLORS[l.status]}>{l.status}</Badge></TableCell>
                 <TableCell className="text-sm text-muted-foreground">{l.source}</TableCell>
                 <TableCell className="text-sm text-muted-foreground">{l.createdAt}</TableCell>
@@ -213,7 +247,7 @@ function UsersTable() {
   );
 }
 
-const CATEGORY_OPTIONS = ["Trademark","Patent","Copyright","Design Registration","International Trademark"] as const;
+const CATEGORY_OPTIONS = ["Trademark","Patent","Copyright","Design Registration","International Trademark","IPR Consultation","Licensing & Technology Transfer","IP Enforcement & Litigation Support"] as const;
 const COUNTRY_FILTER = ["India","USA","UK","Europe (EUIPO)","Australia","Canada"] as const;
 const INQ_STATUS = ["New","Contacted","Quoted","Converted","Lost"] as const;
 

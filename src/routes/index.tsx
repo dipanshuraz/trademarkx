@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, ShieldCheck, Award, Users, Search, Sparkles, Lock, Globe, BadgeIndianRupee, FileCheck, Star, Check, Scale, Briefcase, Megaphone, Lightbulb, Copyright, Palette, Star as StarIcon } from "lucide-react";
+import { ArrowRight, ShieldCheck, Award, Users, Search, Sparkles, Lock, Globe, BadgeIndianRupee, FileCheck, Star, Check, Scale, Briefcase, Megaphone, Lightbulb, Copyright, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SiteHeader, SiteFooter } from "@/components/site-header";
-import { TM_CLASSES, TESTIMONIALS, FAQS, SERVICE_CATEGORIES } from "@/lib/mock-data";
+import { TM_CLASSES, TESTIMONIALS, FAQS, SERVICE_CATEGORIES, IPR_QUICK_LINKS } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -231,7 +231,7 @@ function Index() {
               <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Complete IP Protection, Under One Roof</h2>
               <p className="mt-3 text-muted-foreground">Trademarks, patents, copyrights and designs — handled end-to-end by registered IP professionals.</p>
             </div>
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {[
                 { icon: ShieldCheck, key: "Trademark", to: "/trademark-search" },
                 { icon: Lightbulb, key: "Patent", to: "/services/patents" },
@@ -261,6 +261,28 @@ function Index() {
                   </Card>
                 );
               })}
+              <Card className="border-primary/30 transition hover:border-primary/50 md:col-span-2 lg:col-span-1 xl:col-span-1" style={{ boxShadow: "var(--shadow-elegant)" }}>
+                <CardHeader>
+                  <div className="mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
+                    <Scale className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg">IPR Services</CardTitle>
+                  <CardDescription>Comprehensive intellectual property protection across trademarks, patents, copyrights, designs, licensing, and enforcement.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="mb-4 space-y-1.5 text-sm text-muted-foreground">
+                    {IPR_QUICK_LINKS.map((link) => (
+                      <li key={link.label} className="flex items-start gap-1.5">
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+                        <Link to={link.href} className="hover:text-foreground hover:underline">{link.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <Button asChild size="sm" className="w-full">
+                    <Link to="/services/ipr">View All IPR Services <ArrowRight className="ml-1.5 h-3.5 w-3.5" /></Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>

@@ -198,12 +198,32 @@ export const MOCK_APPLICATIONS: Application[] = (() => {
   return apps;
 })();
 
+export type ServiceType =
+  | "Trademark"
+  | "Patent"
+  | "Copyright"
+  | "Industrial Design"
+  | "IPR Consultation"
+  | "Licensing & Technology Transfer"
+  | "IP Enforcement & Litigation Support";
+
+export const SERVICE_TYPE_OPTIONS: ServiceType[] = [
+  "Trademark",
+  "Patent",
+  "Copyright",
+  "Industrial Design",
+  "IPR Consultation",
+  "Licensing & Technology Transfer",
+  "IP Enforcement & Litigation Support",
+];
+
 export type Lead = {
   id: string;
   name: string;
   mobile: string;
   email: string;
   trademarkName: string;
+  serviceType?: ServiceType;
   status: "New" | "Contacted" | "Qualified" | "Converted" | "Lost";
   source: string;
   createdAt: string;
@@ -212,7 +232,7 @@ export type Lead = {
 export const MOCK_LEADS: Lead[] = (() => {
   const rnd = seedRandom(99);
   const arr: Lead[] = [];
-  const sources = ["Google Ads","Organic","Referral","Facebook","LinkedIn","Direct"];
+  const sources = ["Google Ads","Organic","Referral","Facebook","LinkedIn","Direct","IPR Services Page"];
   for (let i = 0; i < 250; i++) {
     const fname = pick(INDIAN_FIRST_NAMES, rnd);
     const lname = pick(INDIAN_LAST_NAMES, rnd);
@@ -223,6 +243,7 @@ export const MOCK_LEADS: Lead[] = (() => {
       mobile: generateMobile(rnd),
       email: `${fname.toLowerCase()}.${lname.toLowerCase()}@${pick(["gmail.com","yahoo.in","outlook.com","rediffmail.com"], rnd)}`,
       trademarkName: `${pick(TRADEMARK_WORDS, rnd)} ${pick(TRADEMARK_SUFFIX, rnd)}`,
+      serviceType: pick(SERVICE_TYPE_OPTIONS, rnd),
       status: pick(["New","Contacted","Qualified","Converted","Lost"] as const, rnd),
       source: pick(sources, rnd),
       createdAt: created.toISOString().slice(0, 10),
@@ -409,5 +430,127 @@ export const MOCK_SERVICE_INQUIRIES: ServiceInquiry[] = (() => {
   }
   return arr;
 })();
+
+// ===== IPR Services page content =====
+
+export type IprServiceSection = {
+  id: string;
+  title: string;
+  description: string;
+  extraDescription?: string;
+  services: string[];
+};
+
+export const IPR_SERVICE_SECTIONS: IprServiceSection[] = [
+  {
+    id: "trademark-services",
+    title: "Trademark Services",
+    description: "Protect your brand identity and market reputation through comprehensive trademark solutions.",
+    services: [
+      "Trademark Availability Searches",
+      "Trademark Registration in India",
+      "International Trademark Filing (Madrid Protocol)",
+      "Examination Report Responses",
+      "Opposition and Rectification Proceedings",
+      "Trademark Renewal and Portfolio Management",
+      "Trademark Assignment and Licensing",
+      "Brand Protection and Enforcement",
+    ],
+  },
+  {
+    id: "patent-services",
+    title: "Patent Services",
+    description: "Safeguard your inventions and technological innovations with strategic patent protection.",
+    services: [
+      "Patentability Searches",
+      "Prior Art Searches",
+      "Patent Drafting and Filing",
+      "Provisional and Complete Specifications",
+      "Patent Prosecution and Examination Responses",
+      "Patent Opposition Matters",
+      "Patent Portfolio Management",
+      "Patent Licensing and Commercialization",
+      "Freedom-to-Operate (FTO) Analysis",
+    ],
+  },
+  {
+    id: "copyright-services",
+    title: "Copyright Services",
+    description: "Protect original literary, artistic, musical, software, and digital works.",
+    extraDescription:
+      "Copyright protection commonly covers creative content, software code, website content, artwork, photographs, and related original works.",
+    services: [
+      "Copyright Registration",
+      "Software Copyright Protection",
+      "Content and Creative Works Protection",
+      "Copyright Assignment and Licensing",
+      "Copyright Infringement Advisory",
+      "Enforcement and Dispute Resolution",
+    ],
+  },
+  {
+    id: "industrial-design-services",
+    title: "Industrial Design Services",
+    description: "Secure exclusive rights over the aesthetic appearance of your products.",
+    services: [
+      "Design Searches",
+      "Industrial Design Registration",
+      "Design Prosecution",
+      "Design Renewal and Maintenance",
+      "Design Infringement Advisory",
+      "Design Portfolio Management",
+    ],
+  },
+  {
+    id: "ip-due-diligence",
+    title: "IP Due Diligence & Portfolio Management",
+    description:
+      "Strategic management of intellectual property assets to maximize protection, valuation, and commercial opportunities.",
+    services: [
+      "IP Audits",
+      "Portfolio Review and Strategy",
+      "IP Asset Valuation Support",
+      "Due Diligence for Investments and Acquisitions",
+      "IP Risk Assessment",
+      "IP Commercialization Strategies",
+    ],
+  },
+  {
+    id: "licensing-technology-transfer",
+    title: "Licensing & Technology Transfer",
+    description:
+      "Helping businesses monetize and transfer intellectual property assets through legally compliant agreements.",
+    services: [
+      "Drafting and Negotiation of Licensing Agreements",
+      "Technology Transfer Agreements",
+      "Franchise and Brand Licensing",
+      "Research and Development Agreements",
+      "Assignment and Commercial Exploitation of IP Assets",
+    ],
+  },
+  {
+    id: "ip-enforcement",
+    title: "IP Enforcement & Litigation Support",
+    description:
+      "Protect your intellectual property rights against unauthorized use, infringement, and counterfeiting.",
+    services: [
+      "Cease and Desist Notices",
+      "Anti-Counterfeiting Strategies",
+      "Domain Name Disputes",
+      "IP Infringement Actions",
+      "Settlement Negotiations",
+      "Litigation and Dispute Resolution Support",
+    ],
+  },
+];
+
+export const IPR_QUICK_LINKS = [
+  { label: "Trademark Services", href: "/services/ipr#trademark-services" },
+  { label: "Patent Services", href: "/services/ipr#patent-services" },
+  { label: "Copyright Services", href: "/services/ipr#copyright-services" },
+  { label: "Design Registration", href: "/services/ipr#industrial-design-services" },
+  { label: "Licensing & Technology Transfer", href: "/services/ipr#licensing-technology-transfer" },
+  { label: "IP Enforcement & Litigation Support", href: "/services/ipr#ip-enforcement" },
+] as const;
 
 export { EXECUTIVES };

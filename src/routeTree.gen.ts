@@ -17,6 +17,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackApplicationIdRouteImport } from './routes/track.$applicationId'
 import { Route as ServicesPatentsRouteImport } from './routes/services.patents'
+import { Route as ServicesIprRouteImport } from './routes/services.ipr'
 import { Route as ServicesDesignsRouteImport } from './routes/services.designs'
 import { Route as ServicesCopyrightsRouteImport } from './routes/services.copyrights'
 
@@ -60,6 +61,11 @@ const ServicesPatentsRoute = ServicesPatentsRouteImport.update({
   path: '/services/patents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIprRoute = ServicesIprRouteImport.update({
+  id: '/services/ipr',
+  path: '/services/ipr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesDesignsRoute = ServicesDesignsRouteImport.update({
   id: '/services/designs',
   path: '/services/designs',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
+  '/services/ipr': typeof ServicesIprRoute
   '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
+  '/services/ipr': typeof ServicesIprRoute
   '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
+  '/services/ipr': typeof ServicesIprRoute
   '/services/patents': typeof ServicesPatentsRoute
   '/track/$applicationId': typeof TrackApplicationIdRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
+    | '/services/ipr'
     | '/services/patents'
     | '/track/$applicationId'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
+    | '/services/ipr'
     | '/services/patents'
     | '/track/$applicationId'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
+    | '/services/ipr'
     | '/services/patents'
     | '/track/$applicationId'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   TrademarkSearchRoute: typeof TrademarkSearchRoute
   ServicesCopyrightsRoute: typeof ServicesCopyrightsRoute
   ServicesDesignsRoute: typeof ServicesDesignsRoute
+  ServicesIprRoute: typeof ServicesIprRoute
   ServicesPatentsRoute: typeof ServicesPatentsRoute
   TrackApplicationIdRoute: typeof TrackApplicationIdRoute
 }
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesPatentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/ipr': {
+      id: '/services/ipr'
+      path: '/services/ipr'
+      fullPath: '/services/ipr'
+      preLoaderRoute: typeof ServicesIprRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/designs': {
       id: '/services/designs'
       path: '/services/designs'
@@ -244,9 +264,20 @@ const rootRouteChildren: RootRouteChildren = {
   TrademarkSearchRoute: TrademarkSearchRoute,
   ServicesCopyrightsRoute: ServicesCopyrightsRoute,
   ServicesDesignsRoute: ServicesDesignsRoute,
+  ServicesIprRoute: ServicesIprRoute,
   ServicesPatentsRoute: ServicesPatentsRoute,
   TrackApplicationIdRoute: TrackApplicationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

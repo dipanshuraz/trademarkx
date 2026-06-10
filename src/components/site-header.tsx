@@ -13,6 +13,7 @@ export function SiteHeader() {
           <span className="text-lg tracking-tight">TrademarkX</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
+          <Link to="/services/ipr" className="font-semibold text-foreground transition-colors hover:text-primary" activeProps={{ className: "text-primary" }}>IPR Services</Link>
           <Link to="/trademark-search" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Search</Link>
           <Link to="/apply" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Apply</Link>
           <Link to="/services/patents" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Patents</Link>
@@ -51,6 +52,7 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-3 text-sm font-semibold">Services</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
+            <li><Link to="/services/ipr">IPR Services</Link></li>
             <li><Link to="/trademark-search">Trademark Search</Link></li>
             <li><Link to="/services/patents">Patent Services</Link></li>
             <li><Link to="/services/copyrights">Copyright Services</Link></li>
