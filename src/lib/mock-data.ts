@@ -293,3 +293,121 @@ export const FAQS = [
   { q: "When can I use the ® symbol?", a: "Only after the trademark is officially registered. Until then, use ™ to denote that it's been filed." },
   { q: "What if my trademark gets opposed by a third party?", a: "After publication in the journal, third parties have 4 months to oppose. Our Premium plan includes opposition defence and hearing representation." },
 ];
+
+// ===== IP service categories (Trademark / Patent / Copyright / Design / International) =====
+
+export type ServiceCategoryKey = "Trademark" | "Patent" | "Copyright" | "Design Registration" | "International Trademark";
+
+export const SERVICE_CATEGORIES: { key: ServiceCategoryKey; title: string; tagline: string; items: { name: string; desc: string }[] }[] = [
+  {
+    key: "Trademark",
+    title: "Trademark Services",
+    tagline: "Protect your brand name, logo and tagline across India.",
+    items: [
+      { name: "Trademark Search", desc: "Comprehensive availability check across all 45 NICE classes." },
+      { name: "Trademark Filing", desc: "End-to-end filing with the Indian Trade Marks Registry." },
+      { name: "Objection Response", desc: "Drafting and filing replies to examination reports." },
+      { name: "Opposition Defence", desc: "Defend your mark against third-party oppositions." },
+      { name: "Renewal & Assignment", desc: "Renew or transfer ownership of existing trademarks." },
+    ],
+  },
+  {
+    key: "Patent",
+    title: "Patent Services",
+    tagline: "End-to-end protection for your inventions and innovations.",
+    items: [
+      { name: "Patent Search", desc: "Worldwide prior-art and novelty search by domain experts." },
+      { name: "Patent Drafting", desc: "Specifications, claims and figures drafted by registered agents." },
+      { name: "Provisional Patent Filing", desc: "Lock your priority date while you continue R&D." },
+      { name: "Complete Patent Filing", desc: "Full specification filing with the Indian Patent Office." },
+      { name: "Patent Prosecution", desc: "Examination responses, hearings and grant assistance." },
+      { name: "International Patent Filing (PCT)", desc: "PCT filing for protection in 150+ jurisdictions." },
+    ],
+  },
+  {
+    key: "Copyright",
+    title: "Copyright Services",
+    tagline: "Secure original work — code, content, music and design.",
+    items: [
+      { name: "Copyright Registration", desc: "Register any original creative work with the Copyright Office." },
+      { name: "Software Copyright", desc: "Source-code protection for SaaS, apps and platforms." },
+      { name: "Website Copyright", desc: "Protect website design, copy and structure." },
+      { name: "Literary Work Copyright", desc: "Books, articles, scripts and other literary works." },
+      { name: "Artistic Work Copyright", desc: "Paintings, illustrations, photographs and logos." },
+      { name: "Music Copyright", desc: "Compositions, lyrics and sound recordings." },
+    ],
+  },
+  {
+    key: "Design Registration",
+    title: "Design Registration Services",
+    tagline: "Register the unique look and feel of your products.",
+    items: [
+      { name: "Industrial Design Registration", desc: "Protect novel industrial designs under the Designs Act, 2000." },
+      { name: "Product Design Protection", desc: "Shape, configuration and ornamentation of products." },
+      { name: "Packaging Design Registration", desc: "Distinctive packaging that sets your product apart." },
+      { name: "Design Renewal", desc: "Renew existing design registrations and manage portfolios." },
+    ],
+  },
+];
+
+export const GLOBAL_JURISDICTIONS: { code: string; name: string; office: string; price: string; turnaround: string }[] = [
+  { code: "IN", name: "India", office: "IP India", price: "₹3,499 + Govt. Fees", turnaround: "10-18 months" },
+  { code: "US", name: "USA", office: "USPTO", price: "$650 + Government Fees", turnaround: "8-12 months" },
+  { code: "UK", name: "United Kingdom", office: "UKIPO", price: "Request Custom Quote", turnaround: "4-6 months" },
+  { code: "EU", name: "Europe (EUIPO)", office: "EUIPO", price: "Request Custom Quote", turnaround: "4-6 months" },
+  { code: "AU", name: "Australia", office: "IP Australia", price: "Request Custom Quote", turnaround: "7-10 months" },
+  { code: "CA", name: "Canada", office: "CIPO", price: "Request Custom Quote", turnaround: "18-24 months" },
+];
+
+export const COUNTRY_OPTIONS = ["India","USA","UK","Europe (EUIPO)","Australia","Canada","Other"] as const;
+
+export type ServiceInquiry = {
+  id: string;
+  category: ServiceCategoryKey;
+  serviceName: string;
+  country: string;
+  businessName: string;
+  brandName: string;
+  goodsDescription: string;
+  contactName: string;
+  email: string;
+  mobile: string;
+  status: "New" | "Contacted" | "Quoted" | "Converted" | "Lost";
+  assignedTo: string;
+  createdAt: string;
+};
+
+const EXECUTIVES = ["Riya Sharma","Karan Mehta","Aditya Verma","Pooja Iyer","Neha Joshi","Vikram Singh"];
+
+export const MOCK_SERVICE_INQUIRIES: ServiceInquiry[] = (() => {
+  const rnd = seedRandom(555);
+  const cats: ServiceCategoryKey[] = ["Trademark","Patent","Copyright","Design Registration","International Trademark"];
+  const countries = ["India","USA","UK","Europe (EUIPO)","Australia","Canada"];
+  const arr: ServiceInquiry[] = [];
+  for (let i = 0; i < 80; i++) {
+    const cat = pick(cats, rnd);
+    const country = cat === "International Trademark" ? pick(countries, rnd) : "India";
+    const fname = pick(INDIAN_FIRST_NAMES, rnd);
+    const lname = pick(INDIAN_LAST_NAMES, rnd);
+    const brand = `${pick(TRADEMARK_WORDS, rnd)} ${pick(TRADEMARK_SUFFIX, rnd)}`;
+    const svc = cat === "Patent" ? "Provisional Patent Filing" : cat === "Copyright" ? "Copyright Registration" : cat === "Design Registration" ? "Industrial Design Registration" : cat === "International Trademark" ? `${country} Trademark Filing` : "Trademark Filing";
+    arr.push({
+      id: `INQ-${20000 + i}`,
+      category: cat,
+      serviceName: svc,
+      country,
+      businessName: pick(COMPANIES, rnd),
+      brandName: brand,
+      goodsDescription: pick(["Software & SaaS","Food & Beverage","Apparel","Pharmaceuticals","Cosmetics","Hardware","Education","Fintech"], rnd),
+      contactName: `${fname} ${lname}`,
+      email: `${fname.toLowerCase()}.${lname.toLowerCase()}@${pick(["gmail.com","outlook.com","company.in"], rnd)}`,
+      mobile: generateMobile(rnd),
+      status: pick(["New","Contacted","Quoted","Converted","Lost"] as const, rnd),
+      assignedTo: pick(EXECUTIVES, rnd),
+      createdAt: new Date(2025, Math.floor(rnd() * 12), Math.floor(rnd() * 28) + 1).toISOString().slice(0, 10),
+    });
+  }
+  return arr;
+})();
+
+export { EXECUTIVES };
