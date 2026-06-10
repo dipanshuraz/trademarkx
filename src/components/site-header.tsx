@@ -15,6 +15,10 @@ export function SiteHeader() {
         <nav className="hidden items-center gap-7 text-sm font-medium text-muted-foreground md:flex">
           <Link to="/trademark-search" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Search</Link>
           <Link to="/apply" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Apply</Link>
+          <Link to="/services/patents" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Patents</Link>
+          <Link to="/services/copyrights" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Copyrights</Link>
+          <Link to="/services/designs" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Design</Link>
+          <Link to="/global-trademark" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Global Filing</Link>
           <Link to="/dashboard" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Dashboard</Link>
           <Link to="/admin" className="transition-colors hover:text-foreground" activeProps={{ className: "text-foreground" }}>Admin</Link>
         </nav>
@@ -47,10 +51,11 @@ export function SiteFooter() {
         <div>
           <h4 className="mb-3 text-sm font-semibold">Services</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>Trademark Search</li>
-            <li>Trademark Filing</li>
-            <li>Objection Response</li>
-            <li>Renewal & Assignment</li>
+            <li><Link to="/trademark-search">Trademark Search</Link></li>
+            <li><Link to="/services/patents">Patent Services</Link></li>
+            <li><Link to="/services/copyrights">Copyright Services</Link></li>
+            <li><Link to="/services/designs">Design Registration</Link></li>
+            <li><Link to="/global-trademark">Global Trademark Filing</Link></li>
           </ul>
         </div>
         <div>
