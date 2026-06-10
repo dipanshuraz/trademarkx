@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrademarkSearchRouteImport } from './routes/trademark-search'
+import { Route as GlobalTrademarkRouteImport } from './routes/global-trademark'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ApplyRouteImport } from './routes/apply'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -22,6 +23,11 @@ import { Route as ServicesCopyrightsRouteImport } from './routes/services.copyri
 const TrademarkSearchRoute = TrademarkSearchRouteImport.update({
   id: '/trademark-search',
   path: '/trademark-search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlobalTrademarkRoute = GlobalTrademarkRouteImport.update({
+  id: '/global-trademark',
+  path: '/global-trademark',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/apply': typeof ApplyRoute
   '/dashboard': typeof DashboardRoute
+  '/global-trademark': typeof GlobalTrademarkRoute
   '/trademark-search': typeof TrademarkSearchRoute
   '/services/copyrights': typeof ServicesCopyrightsRoute
   '/services/designs': typeof ServicesDesignsRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/apply'
     | '/dashboard'
+    | '/global-trademark'
     | '/trademark-search'
     | '/services/copyrights'
     | '/services/designs'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   ApplyRoute: typeof ApplyRoute
   DashboardRoute: typeof DashboardRoute
+  GlobalTrademarkRoute: typeof GlobalTrademarkRoute
   TrademarkSearchRoute: typeof TrademarkSearchRoute
   ServicesCopyrightsRoute: typeof ServicesCopyrightsRoute
   ServicesDesignsRoute: typeof ServicesDesignsRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/trademark-search'
       fullPath: '/trademark-search'
       preLoaderRoute: typeof TrademarkSearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/global-trademark': {
+      id: '/global-trademark'
+      path: '/global-trademark'
+      fullPath: '/global-trademark'
+      preLoaderRoute: typeof GlobalTrademarkRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   ApplyRoute: ApplyRoute,
   DashboardRoute: DashboardRoute,
+  GlobalTrademarkRoute: GlobalTrademarkRoute,
   TrademarkSearchRoute: TrademarkSearchRoute,
   ServicesCopyrightsRoute: ServicesCopyrightsRoute,
   ServicesDesignsRoute: ServicesDesignsRoute,
