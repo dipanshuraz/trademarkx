@@ -171,7 +171,7 @@ export const MOCK_APPLICATIONS: Application[] = (() => {
     }
     const planRnd = rnd();
     const plan = planRnd < 0.4 ? "Starter" : planRnd < 0.8 ? "Professional" : "Premium";
-    const amount = plan === "Starter" ? 1499 : plan === "Professional" ? 3499 : 6999;
+    const amount = plan === "Starter" ? 2499 : plan === "Professional" ? 4499 : 6999;
     const stages = ["Application Submitted","Examination","Accepted","Published","Registered"];
     const completedUpTo = Math.min(statusIdx, stages.length - 1);
     const timeline = stages.map((stage, idx) => ({
@@ -545,12 +545,12 @@ export const IPR_SERVICE_SECTIONS: IprServiceSection[] = [
 ];
 
 export const IPR_QUICK_LINKS = [
-  { label: "Trademark Services", href: "/services/ipr#trademark-services" },
-  { label: "Patent Services", href: "/services/ipr#patent-services" },
-  { label: "Copyright Services", href: "/services/ipr#copyright-services" },
-  { label: "Design Registration", href: "/services/ipr#industrial-design-services" },
-  { label: "Licensing & Technology Transfer", href: "/services/ipr#licensing-technology-transfer" },
-  { label: "IP Enforcement & Litigation Support", href: "/services/ipr#ip-enforcement" },
+  { label: "Trademark Services", href: "/#trademark-services" },
+  { label: "Patent Services", href: "/#patent-services" },
+  { label: "Copyright Services", href: "/#copyright-services" },
+  { label: "Design Registration", href: "/#industrial-design-services" },
+  { label: "Licensing & Technology Transfer", href: "/#licensing-technology-transfer" },
+  { label: "IP Enforcement & Litigation Support", href: "/#ip-enforcement" },
 ] as const;
 
 export { EXECUTIVES };

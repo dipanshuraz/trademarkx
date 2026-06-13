@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { featureFlags } from "@/lib/feature-flags";
 import { useState, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { Search, Filter, ArrowRight, ShieldCheck, AlertTriangle, AlertCircle } from "lucide-react";
@@ -15,6 +16,11 @@ import { TM_CLASSES, MOCK_SEARCH_RESULTS, type TrademarkStatus } from "@/lib/moc
 type Search = { q?: string; class?: string };
 
 export const Route = createFileRoute("/trademark-search")({
+  beforeLoad: () => {
+    if (!featureFlags.trademarkSearch) {
+      throw redirect({ to: "/" });
+    }
+  },
   validateSearch: (s: Record<string, unknown>): Search => ({
     q: typeof s.q === "string" ? s.q : undefined,
     class: typeof s.class === "string" ? s.class : undefined,

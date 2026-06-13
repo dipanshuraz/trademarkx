@@ -358,8 +358,8 @@ function Step6({ draft, setStep }: { draft: DraftProps["draft"]; setStep: (s: nu
 function Step7({ draft, update, onPaid }: DraftProps & { onPaid: () => void }) {
   const [processing, setProcessing] = useState(false);
   const plans = [
-    { id: "Starter" as const, price: 1499, features: ["1 Class","Search Report","Email Support"] },
-    { id: "Professional" as const, price: 3499, features: ["Up to 2 Classes","Objection Response","Dedicated Manager"] },
+    { id: "Starter" as const, price: 2499, features: ["1 Class","Search Report","Email Support"] },
+    { id: "Professional" as const, price: 4499, features: ["Up to 2 Classes","Objection Response","Dedicated Manager"] },
     { id: "Premium" as const, price: 6999, features: ["Up to 5 Classes","Hearing Representation","Priority Support"] },
   ];
   const govtFee = (draft.classes.length || 1) * 4500;
